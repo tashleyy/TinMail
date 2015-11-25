@@ -36,7 +36,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -45,16 +45,22 @@
     // Configure the cell...
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"Mark as Read";
+            cell.textLabel.text = @"None";
             break;
         case 1:
-            cell.textLabel.text = @"Mark as Unread";
+            cell.textLabel.text = @"Mark as Read";
             break;
         case 2:
-            cell.textLabel.text = @"Move to Trash";
+            cell.textLabel.text = @"Mark as Unread";
             break;
         case 3:
+            cell.textLabel.text = @"Move to Trash";
+            break;
+        case 4:
             cell.textLabel.text = @"Star";
+            break;
+        case 5:
+            cell.textLabel.text = @"Unstar";
             break;
     }
     
@@ -62,7 +68,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
         NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:path];
         if (i == indexPath.row) {

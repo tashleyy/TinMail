@@ -19,7 +19,6 @@
 		A6C2D34D1C02FD98001762E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6C2D34B1C02FD98001762E0 /* Main.storyboard */; };
 		A6C2D34F1C02FD98001762E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A6C2D34E1C02FD98001762E0 /* Images.xcassets */; };
 		A6C2D3521C02FD98001762E0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C2D3501C02FD98001762E0 /* LaunchScreen.xib */; };
-		A6C2D35E1C02FD99001762E0 /* TinMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C2D35D1C02FD99001762E0 /* TinMailTests.m */; };
 		A6C2D36A1C02FDB8001762E0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6C2D3691C02FDB8001762E0 /* Security.framework */; };
 		A6C2D36C1C02FDBE001762E0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6C2D36B1C02FDBE001762E0 /* SystemConfiguration.framework */; };
 		A6C2D36E1C02FE4C001762E0 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C2D36D1C02FE4C001762E0 /* GTMOAuth2ViewTouch.xib */; };
@@ -27,16 +26,6 @@
 		A6F24BC91C0566E50091863E /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F24BC81C0566E50091863E /* SettingsTableViewController.m */; };
 		A6F24BCC1C0566FA0091863E /* ActionsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F24BCB1C0566FA0091863E /* ActionsTableViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		A6C2D3581C02FD98001762E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A6C2D3361C02FD98001762E0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6C2D33D1C02FD98001762E0;
-			remoteInfo = TinMail;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A66E39DE1C03AEDB0024B296 /* libGTLTouchStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGTLTouchStaticLib.a; path = ../libGTLTouchStaticLib.a; sourceTree = "<group>"; };
@@ -60,7 +49,6 @@
 		A6C2D34C1C02FD98001762E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A6C2D34E1C02FD98001762E0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A6C2D3511C02FD98001762E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		A6C2D3571C02FD98001762E0 /* TinMailTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TinMailTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6C2D35C1C02FD99001762E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A6C2D35D1C02FD99001762E0 /* TinMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TinMailTests.m; sourceTree = "<group>"; };
 		A6C2D3691C02FDB8001762E0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -83,13 +71,6 @@
 				A6C2D36C1C02FDBE001762E0 /* SystemConfiguration.framework in Frameworks */,
 				A6C2D36A1C02FDB8001762E0 /* Security.framework in Frameworks */,
 				A66E39DF1C03AEDB0024B296 /* libGTLTouchStaticLib.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6C2D3541C02FD98001762E0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				A6C2D33E1C02FD98001762E0 /* TinMail.app */,
-				A6C2D3571C02FD98001762E0 /* TinMailTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -220,24 +200,6 @@
 			productReference = A6C2D33E1C02FD98001762E0 /* TinMail.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A6C2D3561C02FD98001762E0 /* TinMailTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A6C2D3641C02FD99001762E0 /* Build configuration list for PBXNativeTarget "TinMailTests" */;
-			buildPhases = (
-				A6C2D3531C02FD98001762E0 /* Sources */,
-				A6C2D3541C02FD98001762E0 /* Frameworks */,
-				A6C2D3551C02FD98001762E0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A6C2D3591C02FD98001762E0 /* PBXTargetDependency */,
-			);
-			name = TinMailTests;
-			productName = TinMailTests;
-			productReference = A6C2D3571C02FD98001762E0 /* TinMailTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -249,10 +211,6 @@
 				TargetAttributes = {
 					A6C2D33D1C02FD98001762E0 = {
 						CreatedOnToolsVersion = 6.4;
-					};
-					A6C2D3561C02FD98001762E0 = {
-						CreatedOnToolsVersion = 6.4;
-						TestTargetID = A6C2D33D1C02FD98001762E0;
 					};
 				};
 			};
@@ -270,7 +228,6 @@
 			projectRoot = "";
 			targets = (
 				A6C2D33D1C02FD98001762E0 /* TinMail */,
-				A6C2D3561C02FD98001762E0 /* TinMailTests */,
 			);
 		};
 /* End PBXProject section */
@@ -284,13 +241,6 @@
 				A6C2D34D1C02FD98001762E0 /* Main.storyboard in Resources */,
 				A6C2D3521C02FD98001762E0 /* LaunchScreen.xib in Resources */,
 				A6C2D34F1C02FD98001762E0 /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6C2D3551C02FD98001762E0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,23 +265,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A6C2D3531C02FD98001762E0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A6C2D35E1C02FD99001762E0 /* TinMailTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A6C2D3591C02FD98001762E0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6C2D33D1C02FD98001762E0 /* TinMail */;
-			targetProxy = A6C2D3581C02FD98001762E0 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A6C2D34B1C02FD98001762E0 /* Main.storyboard */ = {
@@ -474,42 +408,6 @@
 			};
 			name = Release;
 		};
-		A6C2D3651C02FD99001762E0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = TinMailTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tashleyy.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TinMail.app/TinMail";
-			};
-			name = Debug;
-		};
-		A6C2D3661C02FD99001762E0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = TinMailTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tashleyy.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TinMail.app/TinMail";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -527,15 +425,6 @@
 			buildConfigurations = (
 				A6C2D3621C02FD99001762E0 /* Debug */,
 				A6C2D3631C02FD99001762E0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A6C2D3641C02FD99001762E0 /* Build configuration list for PBXNativeTarget "TinMailTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A6C2D3651C02FD99001762E0 /* Debug */,
-				A6C2D3661C02FD99001762E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

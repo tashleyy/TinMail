@@ -122,11 +122,10 @@ static const float CARD_WIDTH = 350; //%%% width of the draggable card
             if (labelsResponse.labels.count > 0) {
                 [self.gmail clearLabels];
                 for (GTLGmailLabel *label in labelsResponse.labels) {
-                    if (label.name.length <= 9 || ![[label.name substringToIndex:9] isEqualToString:@"CATEGORY_"]) {
+                    if (![label.name isEqualToString:@"DRAFT"] && ![label.name isEqualToString:@"TRASH"] && (label.name.length <= 9 || ![[label.name substringToIndex:9] isEqualToString:@"CATEGORY_"])) {
                         [self.gmail addLabel:label];
                     }
                 }
-                [self.gmail setCurrIndex:0];
                 [self fetchMessages];
             } else {
                 [self.gmail clearLabels];

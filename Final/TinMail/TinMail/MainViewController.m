@@ -14,8 +14,6 @@ static NSString *const kKeychainItemName = @"Gmail API";
 static NSString *const kClientID = @"159696253233-pk0eg3irijum60l32055b4glj6gbdoeq.apps.googleusercontent.com";
 static NSString *const kClientSecret = @"6Yt11eomNzT5CXNnpUU1XZri";
 static const int MAX_BUFFER_SIZE = 2;
-//static const float CARD_HEIGHT = 550;
-//static const float CARD_WIDTH = 350;
 
 @interface MainViewController ()
 
@@ -24,7 +22,6 @@ static const int MAX_BUFFER_SIZE = 2;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *undoButton;
 @property (strong, nonatomic) NSMutableArray *allCards;
 @property (strong, nonatomic) NSMutableArray *loadedCards;
-@property (nonatomic) NSUInteger cardsLoadedIndex;
 @property (strong, nonatomic) NSArray *actions;
 @property (strong, nonatomic) MainView *lastCard;
 @property (nonatomic) NSUInteger undoIndex;
@@ -122,7 +119,6 @@ static const int MAX_BUFFER_SIZE = 2;
     self.gmail = [GmailService sharedService];
     self.allCards = [NSMutableArray array];
     self.loadedCards = [NSMutableArray array];
-    self.cardsLoadedIndex = 0;
     self.undoIndex = 0;
     self.undoButton.enabled = false;
     self.nextPageToken = nil;
@@ -176,7 +172,6 @@ static const int MAX_BUFFER_SIZE = 2;
     [mainView.webView loadHTMLString:str baseURL:nil];
     mainView.identifier = iden;
     mainView.delegate = self;
-    [self.allCards addObject:mainView];
     
     if (self.loadedCards.count < MAX_BUFFER_SIZE) {
         [self.loadedCards addObject:mainView];
@@ -185,7 +180,8 @@ static const int MAX_BUFFER_SIZE = 2;
         } else {
             [self.cardView insertSubview:self.loadedCards[self.loadedCards.count-1] belowSubview:self.loadedCards[self.loadedCards.count-2]];
         }
-        self.cardsLoadedIndex++;
+    } else {
+        [self.allCards addObject:mainView];
     }
 }
 
@@ -228,7 +224,6 @@ static const int MAX_BUFFER_SIZE = 2;
         if (error == nil) {
             GTLGmailListMessagesResponse *response = object;
             self.nextPageToken = response.nextPageToken;
-            NSLog(@"num: %lu", response.messages.count);
             if (response.messages.count > 0) {
                 for (GTLGmailMessage *message in response.messages) {
                     GTLQueryGmail *query2 = [GTLQueryGmail queryForUsersMessagesGet];
@@ -268,7 +263,6 @@ static const int MAX_BUFFER_SIZE = 2;
         if (error == nil) {
             GTLGmailListMessagesResponse *response = object;
             self.nextPageToken = response.nextPageToken;
-            NSLog(@"num: %lu", response.messages.count);
             if (response.messages.count > 0) {
                 for (GTLGmailMessage *message in response.messages) {
                     GTLQueryGmail *query2 = [GTLQueryGmail queryForUsersMessagesGet];
@@ -378,16 +372,18 @@ static const int MAX_BUFFER_SIZE = 2;
     self.lastCard = (MainView*)card;
     
     [self.loadedCards removeObjectAtIndex:0];
-    if (self.cardsLoadedIndex < self.allCards.count) {
-        [self.loadedCards addObject:self.allCards[self.cardsLoadedIndex]];
-        self.cardsLoadedIndex++;
+    if (self.allCards.count > 0) {
+        [self.loadedCards addObject:self.allCards[0]];
+        [self.allCards removeObjectAtIndex:0];
         if (self.loadedCards.count > 1) {
             [self.cardView insertSubview:self.loadedCards[MAX_BUFFER_SIZE-1] belowSubview:self.loadedCards[MAX_BUFFER_SIZE-2]];
         } else {
             [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
         }
     }
-    if (self.loadedCards.count == 0) {
+    if (self.nextPageToken != nil && self.allCards.count < 10) {
+        [self fetchMore];
+    } else if (self.loadedCards.count == 0) {
         [self showAlert:@"No More Messages" message:@"No more messages with this label."];
     }
     action(self.lastCard.identifier);
@@ -400,16 +396,18 @@ static const int MAX_BUFFER_SIZE = 2;
     self.lastCard = (MainView*)card;
     
     [self.loadedCards removeObjectAtIndex:0];
-    if (self.cardsLoadedIndex < self.allCards.count) {
-        [self.loadedCards addObject:self.allCards[self.cardsLoadedIndex]];
-        self.cardsLoadedIndex++;
+    if (self.allCards.count > 0) {
+        [self.loadedCards addObject:self.allCards[0]];
+        [self.allCards removeObjectAtIndex:0];
         if (self.loadedCards.count > 1) {
             [self.cardView insertSubview:self.loadedCards[MAX_BUFFER_SIZE-1] belowSubview:self.loadedCards[MAX_BUFFER_SIZE-2]];
         } else {
             [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
         }
     }
-    if (self.loadedCards.count == 0) {
+    if (self.nextPageToken != nil && self.allCards.count < 10) {
+        [self fetchMore];
+    } else if (self.loadedCards.count == 0) {
         [self showAlert:@"No More Messages" message:@"No more messages with this label."];
     }
     action(self.lastCard.identifier);
@@ -419,14 +417,19 @@ static const int MAX_BUFFER_SIZE = 2;
 
 - (void)cardDoubleTapped:(UIView *)card {
     [self.loadedCards removeObjectAtIndex:0];
-    if (self.cardsLoadedIndex < self.allCards.count) {
-        [self.loadedCards addObject:self.allCards[self.cardsLoadedIndex]];
-        self.cardsLoadedIndex++;
+    if (self.allCards.count > 0) {
+        [self.loadedCards addObject:self.allCards[0]];
+        [self.allCards removeObjectAtIndex:0];
         if (self.loadedCards.count > 1) {
             [self.cardView insertSubview:self.loadedCards[MAX_BUFFER_SIZE-1] belowSubview:self.loadedCards[MAX_BUFFER_SIZE-2]];
         } else {
             [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
         }
+    }
+    if (self.nextPageToken != nil && self.allCards.count < 10) {
+        [self fetchMore];
+    } else if (self.loadedCards.count == 0) {
+        [self showAlert:@"No More Messages" message:@"No more messages with this label."];
     }
     self.lastCard = (MainView*)card;
     self.undoIndex = NUM_ACTIONS;

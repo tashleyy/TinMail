@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Reveal View Controller-->
@@ -50,6 +51,9 @@
                                 <state key="normal" image="left">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="leftButtonTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1p8-GE-A3r"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fT-fh-RSa" userLabel="rightButton">
                                 <rect key="frame" x="494" y="531" width="40" height="40"/>
@@ -60,25 +64,42 @@
                                 <state key="normal" image="right">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="rightButtonTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="jGR-wU-GbS"/>
+                                </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zdX-7b-C8n">
+                                <rect key="frame" x="30" y="89" width="540" height="419"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="3jo-fF-ok3" secondAttribute="bottom" constant="29" id="BBf-r5-Uga"/>
+                            <constraint firstItem="3fT-fh-RSa" firstAttribute="top" secondItem="zdX-7b-C8n" secondAttribute="bottom" constant="23" id="CdW-oP-4Tk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="zdX-7b-C8n" secondAttribute="trailing" constant="10" id="GC0-3o-CcK"/>
                             <constraint firstItem="3fT-fh-RSa" firstAttribute="bottom" secondItem="3jo-fF-ok3" secondAttribute="bottom" id="JLY-dc-byV"/>
                             <constraint firstAttribute="trailing" secondItem="3fT-fh-RSa" secondAttribute="trailing" constant="66" id="RdW-y0-nH4"/>
+                            <constraint firstItem="zdX-7b-C8n" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="10" id="gt9-5o-pSP"/>
+                            <constraint firstItem="zdX-7b-C8n" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="25" id="pmn-2P-kz4"/>
                             <constraint firstItem="3jo-fF-ok3" firstAttribute="top" secondItem="3fT-fh-RSa" secondAttribute="top" id="vdO-lE-m7V"/>
                             <constraint firstItem="3jo-fF-ok3" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="67" id="y63-UD-K4R"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1iI-hh-YVd">
                         <barButtonItem key="leftBarButtonItem" image="menu" id="34L-ei-xzw"/>
-                        <barButtonItem key="rightBarButtonItem" title="Undo" id="DWd-LB-I4l"/>
+                        <barButtonItem key="rightBarButtonItem" title="Undo" id="DWd-LB-I4l">
+                            <connections>
+                                <action selector="undoButtonTapped:" destination="vXZ-lx-hvc" id="zXk-Wn-r9u"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cardView" destination="zdX-7b-C8n" id="dRE-6b-QP7"/>
                         <outlet property="menuButton" destination="34L-ei-xzw" id="o0G-I9-dzF"/>
-                        <outlet property="undoButton" destination="DWd-LB-I4l" id="DbZ-5T-4KY"/>
+                        <outlet property="undoButton" destination="DWd-LB-I4l" id="KjF-9t-V1a"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -246,15 +267,15 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="actionCell" textLabel="f0T-h9-zcI" style="IBUITableViewCellStyleDefault" id="SVd-VA-0bq">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionCell" textLabel="f0T-h9-zcI" style="IBUITableViewCellStyleDefault" id="SVd-VA-0bq">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SVd-VA-0bq" id="6we-uR-Ecn">
-                                    <rect key="frame" x="0.0" y="0.0" width="561" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="f0T-h9-zcI">
-                                            <rect key="frame" x="15" y="0.0" width="546" height="43"/>
+                                            <rect key="frame" x="15" y="0.0" width="570" height="43"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>

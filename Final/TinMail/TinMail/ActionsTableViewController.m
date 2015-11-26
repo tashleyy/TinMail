@@ -7,8 +7,11 @@
 //
 
 #import "ActionsTableViewController.h"
+#import "GmailService.h"
 
 @interface ActionsTableViewController ()
+
+@property (strong, nonatomic) GmailService *gmail;
 
 @end
 
@@ -16,6 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.gmail = [GmailService sharedService];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -43,25 +48,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"actionCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    switch (indexPath.row) {
-        case 0:
-            cell.textLabel.text = @"None";
-            break;
-        case 1:
-            cell.textLabel.text = @"Mark as Read";
-            break;
-        case 2:
-            cell.textLabel.text = @"Mark as Unread";
-            break;
-        case 3:
-            cell.textLabel.text = @"Move to Trash";
-            break;
-        case 4:
-            cell.textLabel.text = @"Star";
-            break;
-        case 5:
-            cell.textLabel.text = @"Unstar";
-            break;
+    cell.textLabel.text = self.gmail.actionNames[indexPath.row];
+    if (self.isLeftAction) {
+        if (indexPath.row == self.gmail.leftIndex) cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        if (indexPath.row == self.gmail.rightIndex) cell.accessoryType = UITableViewCellAccessoryCheckmark;        
     }
     
     return cell;
@@ -72,6 +63,8 @@
         NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:path];
         if (i == indexPath.row) {
+            if (self.isLeftAction) self.gmail.leftIndex = i;
+            else self.gmail.rightIndex = i;
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         } else {
             cell.accessoryType = UITableViewCellAccessoryNone;

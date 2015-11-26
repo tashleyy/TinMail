@@ -3,7 +3,7 @@
 //  
 //
 //  Created by Ashley Tjahjadi on 11/23/15.
-//
+//  Based on https://github.com/cwRichardKim/TinderSimpleSwipeCards
 //
 
 #import "MainViewController.h"
@@ -13,18 +13,22 @@
 static NSString *const kKeychainItemName = @"Gmail API";
 static NSString *const kClientID = @"159696253233-pk0eg3irijum60l32055b4glj6gbdoeq.apps.googleusercontent.com";
 static NSString *const kClientSecret = @"6Yt11eomNzT5CXNnpUU1XZri";
-static const int MAX_BUFFER_SIZE = 2; //%%% max number of cards loaded at any given time, must be greater than 1
-static const float CARD_HEIGHT = 550; //%%% height of the draggable card
-static const float CARD_WIDTH = 350; //%%% width of the draggable card
+static const int MAX_BUFFER_SIZE = 2;
+//static const float CARD_HEIGHT = 550;
+//static const float CARD_WIDTH = 350;
 
 @interface MainViewController ()
 
-@property (nonatomic, strong) GmailService *gmail;
+@property (strong, nonatomic) GmailService *gmail;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *undoButton;
 @property (strong, nonatomic) NSMutableArray *allCards;
 @property (strong, nonatomic) NSMutableArray *loadedCards;
 @property (nonatomic) NSUInteger cardsLoadedIndex;
+@property (strong, nonatomic) NSArray *actions;
+@property (strong, nonatomic) MainView *lastCard;
+@property (nonatomic) NSUInteger undoIndex;
+@property (weak, nonatomic) IBOutlet UIView *cardView;
 
 @end
 
@@ -42,10 +46,85 @@ static const float CARD_WIDTH = 350; //%%% width of the draggable card
     }
     
     // Do any additional setup after loading the view.
+    
+    void(^None)(NSString *iden) = [ ^(NSString *iden) {} copy];
+    void(^MarkRead)(NSString *iden) = [ ^(NSString *iden) {
+        GTLQueryGmail *query = [GTLQueryGmail queryForUsersMessagesModify];
+        query.identifier = iden;
+        query.addLabelIds = nil;
+        query.removeLabelIds = @[@"UNREAD"];
+        [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            if (error) {
+                if (error.code == 403) [self presentViewController:[self createAuthController] animated:YES completion:nil];
+                NSLog(@"Failed to modify message: error=%@", [error description]);
+            }
+        }];
+    } copy];
+    void(^MarkUnread)(NSString *iden) = [ ^(NSString *iden) {
+        GTLQueryGmail *query = [GTLQueryGmail queryForUsersMessagesModify];
+        query.identifier = iden;
+        query.addLabelIds = @[@"UNREAD"];
+        query.removeLabelIds = nil;
+        [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            if (error) {
+                if (error.code == 403) [self presentViewController:[self createAuthController] animated:YES completion:nil];
+                NSLog(@"Failed to modify message: error=%@", [error description]);
+            }
+        }];
+    } copy];
+    void (^Trash)(NSString *iden) = [ ^(NSString *iden) {
+        GTLQueryGmail *query = [GTLQueryGmail queryForUsersMessagesTrash];
+        query.identifier = iden;
+        [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            if (error) {
+                if (error.code == 403) [self presentViewController:[self createAuthController] animated:YES completion:nil];
+                NSLog(@"Failed to trash message: error=%@", [error description]);
+            }
+        }];
+    } copy];
+    void (^Untrash)(NSString *iden) = [ ^(NSString *iden) {
+        GTLQueryGmail *query = [GTLQueryGmail queryForUsersMessagesUntrash];
+        query.identifier = iden;
+        [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            if (error) {
+                if (error.code == 403) [self presentViewController:[self createAuthController] animated:YES completion:nil];
+                NSLog(@"Failed to untrash message: error=%@", [error description]);
+            }
+        }];
+    } copy];
+    void (^Star)(NSString *iden) = [ ^(NSString *iden) {
+        GTLQueryGmail *query = [GTLQueryGmail queryForUsersMessagesModify];
+        query.identifier = iden;
+        query.addLabelIds = @[@"STARRED"];
+        query.removeLabelIds = nil;
+        [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            if (error) {
+                if (error.code == 403) [self presentViewController:[self createAuthController] animated:YES completion:nil];
+                NSLog(@"Failed to modify message: error=%@", [error description]);
+            }
+        }];
+    } copy];
+    void (^Unstar)(NSString *iden) = [ ^(NSString *iden) {
+        GTLQueryGmail *query = [GTLQueryGmail queryForUsersMessagesModify];
+        query.identifier = iden;
+        query.addLabelIds = nil;
+        query.removeLabelIds = @[@"STARRED"];
+        [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            if (error) {
+                if (error.code == 403) [self presentViewController:[self createAuthController] animated:YES completion:nil];
+                NSLog(@"Failed to modify message: error=%@", [error description]);
+            }
+        }];
+    } copy];
+    self.actions = [NSArray arrayWithObjects:None, MarkRead, MarkUnread, Trash, Star, Unstar, None, MarkUnread, MarkRead, Untrash, Unstar, Star, nil];
+    
     self.gmail = [GmailService sharedService];
     self.allCards = [NSMutableArray array];
     self.loadedCards = [NSMutableArray array];
     self.cardsLoadedIndex = 0;
+    self.undoIndex = 0;
+    self.undoButton.enabled = false;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!self.gmail.service.authorizer.canAuthorize) {
@@ -58,14 +137,10 @@ static const float CARD_WIDTH = 350; //%%% width of the draggable card
     if (self.gmail.numLabels > 0) [self fetchMessages];
 }
 
-// When the view appears, ensure that the Gmail API service is authorized, and perform API calls.
-- (void)viewDidAppear:(BOOL)animated {
-}
-
 
 // Creates the auth controller for authorizing access to Gmail API.
 - (GTMOAuth2ViewControllerTouch *)createAuthController {
-    NSArray *scopes = [NSArray arrayWithObjects:kGTLAuthScopeGmailReadonly, nil];
+    NSArray *scopes = [NSArray arrayWithObjects:kGTLAuthScopeGmailModify, nil];
     GTMOAuth2ViewControllerTouch *authController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:[scopes componentsJoinedByString:@" "] clientID:kClientID clientSecret:kClientSecret keychainItemName:kKeychainItemName completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
         if (error != nil) {
             [self showAlert:@"Authentication Error" message:error.localizedDescription];
@@ -90,31 +165,25 @@ static const float CARD_WIDTH = 350; //%%% width of the draggable card
 
 
 - (void)addCard:(NSString*)str withID:(NSString*)iden {
-    MainView *mainView = [[MainView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - CARD_WIDTH)/2, (self.view.frame.size.height - CARD_HEIGHT)/2 - 15, CARD_WIDTH, CARD_HEIGHT)];
+    MainView *mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 0, self.cardView.bounds.size.width, self.cardView.bounds.size.height)];
+//    MainView *mainView = [[MainView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - CARD_WIDTH)/2, (self.view.frame.size.height - CARD_HEIGHT)/2 - 15, CARD_WIDTH, CARD_HEIGHT)];
     [mainView.webView loadHTMLString:str baseURL:nil];
-    mainView.delegate = self;
     mainView.identifier = iden;
+    mainView.delegate = self;
     [self.allCards addObject:mainView];
     
     if (self.loadedCards.count < MAX_BUFFER_SIZE) {
         [self.loadedCards addObject:mainView];
         if (self.loadedCards.count == 1) {
-            [self.view addSubview:[self.loadedCards objectAtIndex:0]];
+            [self.cardView addSubview:[self.loadedCards objectAtIndex:0]];
         } else {
-            [self.view insertSubview:self.loadedCards[self.loadedCards.count-1] aboveSubview:self.loadedCards[self.loadedCards.count-2]];
+            [self.cardView insertSubview:self.loadedCards[self.loadedCards.count-1] belowSubview:self.loadedCards[self.loadedCards.count-2]];
         }
         self.cardsLoadedIndex++;
     }
 }
 
--(void)cardSwipedLeft:(UIView *)card {
-}
-
--(void)cardSwipedRight:(UIView *)card {
-}
-
 - (void)fetchLabels {
-    NSLog(@"Getting labels...");
     GTLQueryGmail *query = [GTLQueryGmail queryForUsersLabelsList];
     [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         if (error == nil) {
@@ -129,17 +198,20 @@ static const float CARD_WIDTH = 350; //%%% width of the draggable card
                 [self fetchMessages];
             } else {
                 [self.gmail clearLabels];
-                NSLog(@"No labels.");
+                [self showAlert:@"No Labels" message:@"No labels found."];
             }
         } else {
             [self.gmail clearLabels];
-            NSLog(@"Error.");
+            if (error.code == 400) {
+                [self presentViewController:[self createAuthController] animated:YES completion:nil];
+            } else {
+                [self showAlert:@"Error" message:error.localizedDescription];
+            }
         }
     }];
 }
 
 - (void)fetchMessages {
-    NSLog(@"Getting messages...");
     self.allCards = [NSMutableArray array];
     self.loadedCards = [NSMutableArray array];
     self.title = self.gmail.currLabel.name.capitalizedString;
@@ -173,12 +245,95 @@ static const float CARD_WIDTH = 350; //%%% width of the draggable card
                 }
             } else {
                 [self showAlert:@"No Messages" message:@"No more messages with this label."];
-                NSLog(@"No messages.");
             }
         } else {
-            [self showAlert:@"Error" message:error.localizedDescription];
+            if (error.code == 403) {
+                [self presentViewController:[self createAuthController] animated:YES completion:nil];
+            } else {
+                [self showAlert:@"Error" message:error.localizedDescription];
+            }
         }
     }];
+}
+
+- (IBAction)leftButtonTapped:(id)sender {
+    [self.loadedCards.firstObject swipeLeft];
+}
+
+- (IBAction)rightButtonTapped:(id)sender {
+    [self.loadedCards.firstObject swipeRight];
+}
+
+- (IBAction)undoButtonTapped:(id)sender {
+    void (^action)(NSString *iden) = self.actions[self.undoIndex];
+    
+    [self.lastCard reset];
+    [self.loadedCards insertObject:self.lastCard atIndex:0];
+    [((MainView*)self.loadedCards.lastObject) removeFromSuperview];
+    [self.loadedCards removeObjectAtIndex:self.loadedCards.count-1];
+    
+    if (self.loadedCards.count > 1) {
+        [self.cardView insertSubview:self.lastCard aboveSubview:self.loadedCards[1]];
+    } else {
+        [self.cardView addSubview:self.lastCard];
+    }
+
+    action(self.lastCard.identifier);
+    self.undoButton.enabled = false;
+}
+
+- (void)cardSwipedLeft:(UIView *)card {
+    void (^action)(NSString *iden) = self.actions[self.gmail.leftIndex];
+    self.lastCard = (MainView*)card;
+    
+    [self.loadedCards removeObjectAtIndex:0];
+    if (self.cardsLoadedIndex < self.allCards.count) {
+        [self.loadedCards addObject:self.allCards[self.cardsLoadedIndex]];
+        self.cardsLoadedIndex++;
+        if (self.loadedCards.count > 1) {
+            [self.cardView insertSubview:self.loadedCards[MAX_BUFFER_SIZE-1] belowSubview:self.loadedCards[MAX_BUFFER_SIZE-2]];
+        } else {
+            [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
+        }
+    }
+    action(self.lastCard.identifier);
+    self.undoIndex = self.gmail.leftIndex + NUM_ACTIONS;
+    self.undoButton.enabled = true;
+}
+
+- (void)cardSwipedRight:(UIView *)card {
+    void (^action)(NSString *iden) = self.actions[self.gmail.rightIndex];
+    self.lastCard = (MainView*)card;
+    
+    [self.loadedCards removeObjectAtIndex:0];
+    if (self.cardsLoadedIndex < self.allCards.count) {
+        [self.loadedCards addObject:self.allCards[self.cardsLoadedIndex]];
+        self.cardsLoadedIndex++;
+        if (self.loadedCards.count > 1) {
+            [self.cardView insertSubview:self.loadedCards[MAX_BUFFER_SIZE-1] belowSubview:self.loadedCards[MAX_BUFFER_SIZE-2]];
+        } else {
+            [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
+        }
+    }
+    action(self.lastCard.identifier);
+    self.undoIndex = self.gmail.rightIndex + NUM_ACTIONS;
+    self.undoButton.enabled = true;
+}
+
+- (void)cardDoubleTapped:(UIView *)card {
+    [self.loadedCards removeObjectAtIndex:0];
+    if (self.cardsLoadedIndex < self.allCards.count) {
+        [self.loadedCards addObject:self.allCards[self.cardsLoadedIndex]];
+        self.cardsLoadedIndex++;
+        if (self.loadedCards.count > 1) {
+            [self.cardView insertSubview:self.loadedCards[MAX_BUFFER_SIZE-1] belowSubview:self.loadedCards[MAX_BUFFER_SIZE-2]];
+        } else {
+            [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
+        }
+    }
+    self.lastCard = (MainView*)card;
+    self.undoIndex = NUM_ACTIONS;
+    self.undoButton.enabled = true;
 }
 
 - (NSString*)readBodyData:(NSString*) data {

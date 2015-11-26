@@ -10,4 +10,6 @@
 
 @interface ActionsTableViewController : UITableViewController
 
+@property (nonatomic) BOOL isLeftAction;
+
 @end

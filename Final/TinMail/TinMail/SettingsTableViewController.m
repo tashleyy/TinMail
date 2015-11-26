@@ -7,6 +7,8 @@
 //
 
 #import "SettingsTableViewController.h"
+#import "ActionsTableViewController.h"
+#import "GmailService.h"
 
 @interface SettingsTableViewController ()
 
@@ -22,6 +24,12 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -43,8 +51,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"settingCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    if (indexPath.row == 0) cell.textLabel.text = @"Left Action";
-    else cell.textLabel.text = @"Right Action";
+    GmailService *gmail = [GmailService sharedService];
+    if (indexPath.row == 0) {
+        cell.textLabel.text = @"Left Action";
+        cell.detailTextLabel.text = gmail.actionNames[gmail.leftIndex];
+    } else {
+        cell.textLabel.text = @"Right Action";
+        cell.detailTextLabel.text = gmail.actionNames[gmail.rightIndex];
+    }
     
     return cell;
 }
@@ -87,14 +101,20 @@
 }
 */
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    ActionsTableViewController *dest = segue.destinationViewController;
+    if (self.tableView.indexPathForSelectedRow.row == 0) {
+        dest.isLeftAction = YES;
+        dest.title = @"Left Action";
+    } else {
+        dest.isLeftAction = NO;
+        dest.title = @"Right Action";
+    }
 }
-*/
 
 @end

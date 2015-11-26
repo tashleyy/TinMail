@@ -11,7 +11,7 @@
 #import "GTLGmail.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 
-typedef void(^ActionHandler)(NSString *iden);
+static const NSUInteger NUM_ACTIONS = 6;
 
 @interface GmailService : NSObject
 
@@ -19,6 +19,7 @@ typedef void(^ActionHandler)(NSString *iden);
 @property (nonatomic) NSUInteger currIndex;
 @property (nonatomic) NSUInteger leftIndex;
 @property (nonatomic) NSUInteger rightIndex;
+@property (strong, nonatomic) NSArray *actionNames;
 
 + (instancetype) sharedService;
 - (NSUInteger) numLabels;
@@ -26,7 +27,5 @@ typedef void(^ActionHandler)(NSString *iden);
 - (void) addLabel: (GTLGmailLabel*)label;
 - (void) clearLabels;
 - (GTLGmailLabel*) currLabel;
-- (ActionHandler) leftAction;
-- (ActionHandler) rightAction;
 
 @end

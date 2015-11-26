@@ -3,7 +3,7 @@
 //  
 //
 //  Created by Ashley Tjahjadi on 11/23/15.
-//
+//  Based on https://github.com/cwRichardKim/TinderSimpleSwipeCards
 //
 
 #import <UIKit/UIKit.h>

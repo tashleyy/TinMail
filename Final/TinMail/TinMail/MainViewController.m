@@ -29,6 +29,7 @@ static const int MAX_BUFFER_SIZE = 2;
 @property (strong, nonatomic) MainView *lastCard;
 @property (nonatomic) NSUInteger undoIndex;
 @property (weak, nonatomic) IBOutlet UIView *cardView;
+@property (strong, nonatomic) NSString *nextPageToken;
 
 @end
 
@@ -124,6 +125,7 @@ static const int MAX_BUFFER_SIZE = 2;
     self.cardsLoadedIndex = 0;
     self.undoIndex = 0;
     self.undoButton.enabled = false;
+    self.nextPageToken = nil;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -134,6 +136,11 @@ static const int MAX_BUFFER_SIZE = 2;
             [self fetchLabels];
         }
     });
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     if (self.gmail.numLabels > 0) [self fetchMessages];
 }
 
@@ -166,7 +173,6 @@ static const int MAX_BUFFER_SIZE = 2;
 
 - (void)addCard:(NSString*)str withID:(NSString*)iden {
     MainView *mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 0, self.cardView.bounds.size.width, self.cardView.bounds.size.height)];
-//    MainView *mainView = [[MainView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - CARD_WIDTH)/2, (self.view.frame.size.height - CARD_HEIGHT)/2 - 15, CARD_WIDTH, CARD_HEIGHT)];
     [mainView.webView loadHTMLString:str baseURL:nil];
     mainView.identifier = iden;
     mainView.delegate = self;
@@ -217,9 +223,12 @@ static const int MAX_BUFFER_SIZE = 2;
     self.title = self.gmail.currLabel.name.capitalizedString;
     GTLQueryGmail *query1 = [GTLQueryGmail queryForUsersMessagesList];
     query1.q = [NSString stringWithFormat:@"label:%@", self.gmail.currLabel.name.lowercaseString];
+    query1.maxResults = 30;
     [self.gmail.service executeQuery:query1 completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         if (error == nil) {
             GTLGmailListMessagesResponse *response = object;
+            self.nextPageToken = response.nextPageToken;
+            NSLog(@"num: %lu", response.messages.count);
             if (response.messages.count > 0) {
                 for (GTLGmailMessage *message in response.messages) {
                     GTLQueryGmail *query2 = [GTLQueryGmail queryForUsersMessagesGet];
@@ -227,26 +236,19 @@ static const int MAX_BUFFER_SIZE = 2;
                     [self.gmail.service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
                         if (error == nil) {
                             GTLGmailMessage *msg = object;
-                            if (msg.payload.parts != nil) {
-                                if (((GTLGmailMessagePart*)msg.payload.parts.lastObject).body.data != nil) {
-                                    NSString *data = ((GTLGmailMessagePart*)msg.payload.parts.lastObject).body.data;
-                                    NSString *s = [self readBodyData:data];
-                                    [self addCard:s withID:msg.identifier];
-                                }
-                            } else if (message.payload.body.data != nil) {
-                                NSString *data = message.payload.body.data;
-                                NSString *s = [self readBodyData:data];
-                                [self addCard:s withID:msg.identifier];
-                            }
+                            [self parsePart:msg.payload withID:msg.identifier];
                         } else {
+                            NSLog(@"Error.");
                             [self showAlert:@"Error" message:error.localizedDescription];
                         }
                     }];
                 }
             } else {
+                NSLog(@"No messages.");
                 [self showAlert:@"No Messages" message:@"No more messages with this label."];
             }
         } else {
+            NSLog(@"Error.");
             if (error.code == 403) {
                 [self presentViewController:[self createAuthController] animated:YES completion:nil];
             } else {
@@ -254,6 +256,95 @@ static const int MAX_BUFFER_SIZE = 2;
             }
         }
     }];
+}
+
+- (void)fetchMore {
+    GTLQueryGmail *query1 = [GTLQueryGmail queryForUsersMessagesList];
+    query1.q = [NSString stringWithFormat:@"label:%@", self.gmail.currLabel.name.lowercaseString];
+    query1.pageToken = self.nextPageToken;
+    self.nextPageToken = nil;
+    query1.maxResults = 30;
+    [self.gmail.service executeQuery:query1 completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        if (error == nil) {
+            GTLGmailListMessagesResponse *response = object;
+            self.nextPageToken = response.nextPageToken;
+            NSLog(@"num: %lu", response.messages.count);
+            if (response.messages.count > 0) {
+                for (GTLGmailMessage *message in response.messages) {
+                    GTLQueryGmail *query2 = [GTLQueryGmail queryForUsersMessagesGet];
+                    query2.identifier = message.identifier;
+                    [self.gmail.service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+                        if (error == nil) {
+                            GTLGmailMessage *msg = object;
+                            [self parsePart:msg.payload withID:msg.identifier];
+                        } else {
+                            NSLog(@"Error.");
+                            [self showAlert:@"Error" message:error.localizedDescription];
+                        }
+                    }];
+                }
+            } else {
+                NSLog(@"No messages.");
+                [self showAlert:@"No Messages" message:@"No more messages with this label."];
+            }
+        } else {
+            NSLog(@"Error.");
+            if (error.code == 403) {
+                [self presentViewController:[self createAuthController] animated:YES completion:nil];
+            } else {
+                [self showAlert:@"Error" message:error.localizedDescription];
+            }
+        }
+    }];
+}
+
+- (void)parsePart:(GTLGmailMessagePart*)part withID:(NSString *)iden {
+    if (part.parts != nil) {
+        for (GTLGmailMessagePart *p in part.parts) {
+            [self parsePart:p withID:iden];
+        }
+    } else if (part.body.data != nil && ![part.mimeType isEqualToString:@"text/plain"]) {
+        [self parseBodyData:part.body withID:iden];
+    } else if (part.body.attachmentId != nil){
+        [self parseBodyAttach:part.body withID:iden];
+    } else if (![part.mimeType isEqualToString:@"text/plain"]) {
+        NSLog(@"Cannot parse part: %@", part);
+    }
+}
+
+- (void)parseBodyData:(GTLGmailMessagePartBody*)body withID:(NSString*)iden {
+    NSString *data = body.data;
+    NSString *s = [self readBodyData:data];
+    [self addCard:s withID:iden];
+}
+
+- (void)parseBodyAttach:(GTLGmailMessagePartBody*)body withID:(NSString*)iden {
+    GTLQueryGmail *query3 = [GTLQueryGmail queryForUsersMessagesAttachmentsGet];
+    query3.identifier = body.attachmentId;
+    query3.messageId = iden;
+    [self.gmail.service executeQuery:query3 completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        if (error == nil) {
+            GTLGmailMessagePartBody *b = object;
+            if (b.data != nil) {
+                [self parseBodyData:b withID:iden];
+            } else if (b.attachmentId != nil) {
+                [self parseBodyAttach:b withID:iden];
+            }
+        } else {
+            NSLog(@"Error.");
+            [self showAlert:@"Error" message:error.localizedDescription];
+        }
+    }];
+}
+
+- (NSString*)readBodyData:(NSString*) data {
+    NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-"];
+    data = [[data componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @"+"];
+    doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"_"];
+    data = [[data componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @"/"];
+    NSData *htmlData = [[NSData alloc] initWithBase64EncodedString:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSString *s = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+    return s;
 }
 
 - (IBAction)leftButtonTapped:(id)sender {
@@ -277,7 +368,7 @@ static const int MAX_BUFFER_SIZE = 2;
     } else {
         [self.cardView addSubview:self.lastCard];
     }
-
+    
     action(self.lastCard.identifier);
     self.undoButton.enabled = false;
 }
@@ -295,6 +386,9 @@ static const int MAX_BUFFER_SIZE = 2;
         } else {
             [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
         }
+    }
+    if (self.loadedCards.count == 0) {
+        [self showAlert:@"No More Messages" message:@"No more messages with this label."];
     }
     action(self.lastCard.identifier);
     self.undoIndex = self.gmail.leftIndex + NUM_ACTIONS;
@@ -315,6 +409,9 @@ static const int MAX_BUFFER_SIZE = 2;
             [self.cardView addSubview:self.loadedCards[MAX_BUFFER_SIZE-1]];
         }
     }
+    if (self.loadedCards.count == 0) {
+        [self showAlert:@"No More Messages" message:@"No more messages with this label."];
+    }
     action(self.lastCard.identifier);
     self.undoIndex = self.gmail.rightIndex + NUM_ACTIONS;
     self.undoButton.enabled = true;
@@ -334,16 +431,6 @@ static const int MAX_BUFFER_SIZE = 2;
     self.lastCard = (MainView*)card;
     self.undoIndex = NUM_ACTIONS;
     self.undoButton.enabled = true;
-}
-
-- (NSString*)readBodyData:(NSString*) data {
-    NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-"];
-    data = [[data componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @"+"];
-    doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"_"];
-    data = [[data componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @"/"];
-    NSData *htmlData = [[NSData alloc] initWithBase64EncodedString:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    NSString *s = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
-    return s;
 }
 
 - (void)didReceiveMemoryWarning {

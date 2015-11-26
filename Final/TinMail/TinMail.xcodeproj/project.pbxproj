@@ -13,6 +13,14 @@
 		A66E39E81C03C3A70024B296 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A66E39E71C03C3A70024B296 /* SWRevealViewController.m */; };
 		A66E39EC1C03D49E0024B296 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A66E39EB1C03D49E0024B296 /* MenuTableViewController.m */; };
 		A66E39EF1C03DC750024B296 /* GmailService.m in Sources */ = {isa = PBXBuildFile; fileRef = A66E39EE1C03DC750024B296 /* GmailService.m */; };
+		A6C20A771C07197B009439BF /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6C20A751C07197B009439BF /* Interface.storyboard */; };
+		A6C20A791C07197B009439BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A6C20A781C07197B009439BF /* Assets.xcassets */; };
+		A6C20A801C07197B009439BF /* TinMailWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A6C20A7F1C07197B009439BF /* TinMailWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A6C20A881C07197B009439BF /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C20A871C07197B009439BF /* InterfaceController.m */; };
+		A6C20A8B1C07197B009439BF /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C20A8A1C07197B009439BF /* ExtensionDelegate.m */; };
+		A6C20A8E1C07197B009439BF /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C20A8D1C07197B009439BF /* NotificationController.m */; };
+		A6C20A901C07197B009439BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A6C20A8F1C07197B009439BF /* Assets.xcassets */; };
+		A6C20A941C07197B009439BF /* TinMailWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A6C20A731C07197A009439BF /* TinMailWatch.app */; };
 		A6C2D3441C02FD98001762E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C2D3431C02FD98001762E0 /* main.m */; };
 		A6C2D3471C02FD98001762E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C2D3461C02FD98001762E0 /* AppDelegate.m */; };
 		A6C2D34A1C02FD98001762E0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C2D3491C02FD98001762E0 /* ViewController.m */; };
@@ -27,6 +35,48 @@
 		A6F24BCC1C0566FA0091863E /* ActionsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F24BCB1C0566FA0091863E /* ActionsTableViewController.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A6C20A811C07197B009439BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A6C2D3361C02FD98001762E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6C20A7E1C07197B009439BF;
+			remoteInfo = "TinMailWatch Extension";
+		};
+		A6C20A921C07197B009439BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A6C2D3361C02FD98001762E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6C20A721C07197A009439BF;
+			remoteInfo = TinMailWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A6C20A981C07197B009439BF /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A6C20A801C07197B009439BF /* TinMailWatch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6C20A9C1C07197B009439BF /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				A6C20A941C07197B009439BF /* TinMailWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		A66E39DE1C03AEDB0024B296 /* libGTLTouchStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGTLTouchStaticLib.a; path = ../libGTLTouchStaticLib.a; sourceTree = "<group>"; };
 		A66E39E01C03B4410024B296 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -39,6 +89,20 @@
 		A66E39EB1C03D49E0024B296 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 		A66E39ED1C03DC750024B296 /* GmailService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmailService.h; sourceTree = "<group>"; };
 		A66E39EE1C03DC750024B296 /* GmailService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GmailService.m; sourceTree = "<group>"; };
+		A6C20A731C07197A009439BF /* TinMailWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinMailWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6C20A761C07197B009439BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		A6C20A781C07197B009439BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A6C20A7A1C07197B009439BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A6C20A7F1C07197B009439BF /* TinMailWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TinMailWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6C20A851C07197B009439BF /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		A6C20A861C07197B009439BF /* InterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
+		A6C20A871C07197B009439BF /* InterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
+		A6C20A891C07197B009439BF /* ExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
+		A6C20A8A1C07197B009439BF /* ExtensionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExtensionDelegate.m; sourceTree = "<group>"; };
+		A6C20A8C1C07197B009439BF /* NotificationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
+		A6C20A8D1C07197B009439BF /* NotificationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
+		A6C20A8F1C07197B009439BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A6C20A911C07197B009439BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A6C2D33E1C02FD98001762E0 /* TinMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6C2D3421C02FD98001762E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A6C2D3431C02FD98001762E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -64,6 +128,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A6C20A7C1C07197B009439BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A6C2D33B1C02FD98001762E0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,6 +188,40 @@
 			name = controller;
 			sourceTree = "<group>";
 		};
+		A6C20A741C07197A009439BF /* TinMailWatch */ = {
+			isa = PBXGroup;
+			children = (
+				A6C20A751C07197B009439BF /* Interface.storyboard */,
+				A6C20A781C07197B009439BF /* Assets.xcassets */,
+				A6C20A7A1C07197B009439BF /* Info.plist */,
+			);
+			path = TinMailWatch;
+			sourceTree = "<group>";
+		};
+		A6C20A831C07197B009439BF /* TinMailWatch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				A6C20A861C07197B009439BF /* InterfaceController.h */,
+				A6C20A871C07197B009439BF /* InterfaceController.m */,
+				A6C20A891C07197B009439BF /* ExtensionDelegate.h */,
+				A6C20A8A1C07197B009439BF /* ExtensionDelegate.m */,
+				A6C20A8C1C07197B009439BF /* NotificationController.h */,
+				A6C20A8D1C07197B009439BF /* NotificationController.m */,
+				A6C20A8F1C07197B009439BF /* Assets.xcassets */,
+				A6C20A911C07197B009439BF /* Info.plist */,
+				A6C20A841C07197B009439BF /* Supporting Files */,
+			);
+			path = "TinMailWatch Extension";
+			sourceTree = "<group>";
+		};
+		A6C20A841C07197B009439BF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6C20A851C07197B009439BF /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		A6C2D3351C02FD98001762E0 = {
 			isa = PBXGroup;
 			children = (
@@ -125,6 +230,8 @@
 				A6C2D3691C02FDB8001762E0 /* Security.framework */,
 				A6C2D3401C02FD98001762E0 /* TinMail */,
 				A6C2D35A1C02FD99001762E0 /* TinMailTests */,
+				A6C20A741C07197A009439BF /* TinMailWatch */,
+				A6C20A831C07197B009439BF /* TinMailWatch Extension */,
 				A6C2D33F1C02FD98001762E0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -133,6 +240,8 @@
 			isa = PBXGroup;
 			children = (
 				A6C2D33E1C02FD98001762E0 /* TinMail.app */,
+				A6C20A731C07197A009439BF /* TinMailWatch.app */,
+				A6C20A7F1C07197B009439BF /* TinMailWatch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -183,6 +292,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A6C20A721C07197A009439BF /* TinMailWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6C20A991C07197B009439BF /* Build configuration list for PBXNativeTarget "TinMailWatch" */;
+			buildPhases = (
+				A6C20A711C07197A009439BF /* Resources */,
+				A6C20A981C07197B009439BF /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A6C20A821C07197B009439BF /* PBXTargetDependency */,
+			);
+			name = TinMailWatch;
+			productName = TinMailWatch;
+			productReference = A6C20A731C07197A009439BF /* TinMailWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		A6C20A7E1C07197B009439BF /* TinMailWatch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6C20A951C07197B009439BF /* Build configuration list for PBXNativeTarget "TinMailWatch Extension" */;
+			buildPhases = (
+				A6C20A7B1C07197B009439BF /* Sources */,
+				A6C20A7C1C07197B009439BF /* Frameworks */,
+				A6C20A7D1C07197B009439BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TinMailWatch Extension";
+			productName = "TinMailWatch Extension";
+			productReference = A6C20A7F1C07197B009439BF /* TinMailWatch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 		A6C2D33D1C02FD98001762E0 /* TinMail */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A6C2D3611C02FD99001762E0 /* Build configuration list for PBXNativeTarget "TinMail" */;
@@ -190,10 +333,12 @@
 				A6C2D33A1C02FD98001762E0 /* Sources */,
 				A6C2D33B1C02FD98001762E0 /* Frameworks */,
 				A6C2D33C1C02FD98001762E0 /* Resources */,
+				A6C20A9C1C07197B009439BF /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A6C20A931C07197B009439BF /* PBXTargetDependency */,
 			);
 			name = TinMail;
 			productName = TinMail;
@@ -209,6 +354,12 @@
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Tiffany Tjahjadi";
 				TargetAttributes = {
+					A6C20A721C07197A009439BF = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+					A6C20A7E1C07197B009439BF = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					A6C2D33D1C02FD98001762E0 = {
 						CreatedOnToolsVersion = 6.4;
 					};
@@ -228,11 +379,30 @@
 			projectRoot = "";
 			targets = (
 				A6C2D33D1C02FD98001762E0 /* TinMail */,
+				A6C20A721C07197A009439BF /* TinMailWatch */,
+				A6C20A7E1C07197B009439BF /* TinMailWatch Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A6C20A711C07197A009439BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6C20A791C07197B009439BF /* Assets.xcassets in Resources */,
+				A6C20A771C07197B009439BF /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6C20A7D1C07197B009439BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6C20A901C07197B009439BF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A6C2D33C1C02FD98001762E0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -247,6 +417,16 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A6C20A7B1C07197B009439BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6C20A8B1C07197B009439BF /* ExtensionDelegate.m in Sources */,
+				A6C20A881C07197B009439BF /* InterfaceController.m in Sources */,
+				A6C20A8E1C07197B009439BF /* NotificationController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A6C2D33A1C02FD98001762E0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -267,7 +447,28 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A6C20A821C07197B009439BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6C20A7E1C07197B009439BF /* TinMailWatch Extension */;
+			targetProxy = A6C20A811C07197B009439BF /* PBXContainerItemProxy */;
+		};
+		A6C20A931C07197B009439BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6C20A721C07197A009439BF /* TinMailWatch */;
+			targetProxy = A6C20A921C07197B009439BF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		A6C20A751C07197B009439BF /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6C20A761C07197B009439BF /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
 		A6C2D34B1C02FD98001762E0 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -287,6 +488,74 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A6C20A961C07197B009439BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "TinMailWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tashleyy.TinMail.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		A6C20A971C07197B009439BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "TinMailWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tashleyy.TinMail.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		A6C20A9A1C07197B009439BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IBSC_MODULE = TinMailWatch_Extension;
+				INFOPLIST_FILE = TinMailWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tashleyy.TinMail.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		A6C20A9B1C07197B009439BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				IBSC_MODULE = TinMailWatch_Extension;
+				INFOPLIST_FILE = TinMailWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tashleyy.TinMail.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
 		A6C2D35F1C02FD99001762E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -411,6 +680,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A6C20A951C07197B009439BF /* Build configuration list for PBXNativeTarget "TinMailWatch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6C20A961C07197B009439BF /* Debug */,
+				A6C20A971C07197B009439BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		A6C20A991C07197B009439BF /* Build configuration list for PBXNativeTarget "TinMailWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6C20A9A1C07197B009439BF /* Debug */,
+				A6C20A9B1C07197B009439BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		A6C2D3391C02FD98001762E0 /* Build configuration list for PBXProject "TinMail" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

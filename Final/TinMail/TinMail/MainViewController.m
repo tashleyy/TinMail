@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 #import "GmailService.h"
 #import "SWRevealViewController.h"
+#import <Firebase/Firebase.h>
 
 static NSString *const kKeychainItemName = @"Gmail API";
 static NSString *const kClientID = @"159696253233-pk0eg3irijum60l32055b4glj6gbdoeq.apps.googleusercontent.com";
@@ -129,6 +130,7 @@ static const int MAX_BUFFER_SIZE = 2;
             // Not yet authorized, request authorization by pushing the login UI onto the UI stack.
             [self presentViewController:[self createAuthController] animated:YES completion:nil];
         } else {
+            [self retrieveSettings];
             [self fetchLabels];
         }
     });
@@ -152,10 +154,30 @@ static const int MAX_BUFFER_SIZE = 2;
         else {
             self.gmail.service.authorizer = auth;
             [self dismissViewControllerAnimated:YES completion:nil];
+            [self retrieveSettings];
             [self fetchLabels];
         }
     }];
     return authController;
+}
+
+- (void)retrieveSettings {
+    GTLQueryGmail *query = [GTLQueryGmail queryForUsersGetProfile];
+    [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        GTLGmailProfile *profile = object;
+        NSString *email = profile.emailAddress;
+        NSArray *tokens = [email componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@."]];
+        Firebase *root = [[Firebase alloc] initWithUrl:@"https://tinmail.firebaseio.com/users"];
+        Firebase *user = [root childByAppendingPath:[NSString stringWithFormat:@"%@/%@/%@", tokens[2], tokens[1], tokens[0]]];
+        [user observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+            if (snapshot.value != [NSNull null]) {
+                NSNumber *left = snapshot.value[@"left"];
+                NSNumber *right = snapshot.value[@"right"];
+                self.gmail.leftIndex = [left unsignedIntegerValue];
+                self.gmail.rightIndex = [right unsignedIntegerValue];
+            }
+        }];
+    }];
 }
 
 // Helper for showing an alert

@@ -9,8 +9,11 @@
 #import "SettingsTableViewController.h"
 #import "ActionsTableViewController.h"
 #import "GmailService.h"
+#import <Firebase/Firebase.h>
 
 @interface SettingsTableViewController ()
+
+@property (strong, nonatomic) GmailService *gmail;
 
 @end
 
@@ -19,6 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.gmail = [GmailService sharedService];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -51,21 +55,35 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"settingCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    GmailService *gmail = [GmailService sharedService];
     if (indexPath.row == 0) {
         cell.textLabel.text = @"Left Action";
-        cell.detailTextLabel.text = gmail.actionNames[gmail.leftIndex];
+        cell.detailTextLabel.text = self.gmail.actionNames[self.gmail.leftIndex];
     } else {
         cell.textLabel.text = @"Right Action";
-        cell.detailTextLabel.text = gmail.actionNames[gmail.rightIndex];
+        cell.detailTextLabel.text = self.gmail.actionNames[self.gmail.rightIndex];
     }
     
     return cell;
 }
 
 - (IBAction)doneButtonTapped:(id)sender {
+    [self updateSettings];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (void)updateSettings {
+    GTLQueryGmail *query = [GTLQueryGmail queryForUsersGetProfile];
+    [self.gmail.service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        GTLGmailProfile *profile = object;
+        NSString *email = profile.emailAddress;
+        NSArray *tokens = [email componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@."]];
+        Firebase *root = [[Firebase alloc] initWithUrl:@"https://tinmail.firebaseio.com/users"];
+        Firebase *user = [root childByAppendingPath:[NSString stringWithFormat:@"%@/%@/%@", tokens[2], tokens[1], tokens[0]]];
+        NSDictionary *dict = @{ @"left" : [NSNumber numberWithUnsignedInteger:self.gmail.leftIndex] , @"right" : [NSNumber numberWithUnsignedInteger:self.gmail.rightIndex] };
+        [user updateChildValues:dict];
+    }];
+}
+
 
 /*
 // Override to support conditional editing of the table view.

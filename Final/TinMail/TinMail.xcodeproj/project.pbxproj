@@ -24,6 +24,10 @@
 		A6C2D3711C02FE6A001762E0 /* GTLGmail_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C2D36F1C02FE6A001762E0 /* GTLGmail_Sources.m */; };
 		A6F24BC91C0566E50091863E /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F24BC81C0566E50091863E /* SettingsTableViewController.m */; };
 		A6F24BCC1C0566FA0091863E /* ActionsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F24BCB1C0566FA0091863E /* ActionsTableViewController.m */; };
+		A6FCAAE01C0819F30074E95B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6FCAADF1C0819F30074E95B /* CFNetwork.framework */; };
+		A6FCAAE21C081A510074E95B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A6FCAAE11C081A510074E95B /* libc++.tbd */; };
+		A6FCAAE41C081A620074E95B /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A6FCAAE31C081A620074E95B /* libicucore.tbd */; };
+		A6FCAAE81C081E0F0074E95B /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6FCAAE71C081E0F0074E95B /* Firebase.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -71,6 +75,10 @@
 		A6F24BC81C0566E50091863E /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		A6F24BCA1C0566FA0091863E /* ActionsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionsTableViewController.h; sourceTree = "<group>"; };
 		A6F24BCB1C0566FA0091863E /* ActionsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionsTableViewController.m; sourceTree = "<group>"; };
+		A6FCAADF1C0819F30074E95B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		A6FCAAE11C081A510074E95B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		A6FCAAE31C081A620074E95B /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		A6FCAAE71C081E0F0074E95B /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Firebase.framework; path = ../Firebase.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +86,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6FCAAE41C081A620074E95B /* libicucore.tbd in Frameworks */,
+				A6FCAAE21C081A510074E95B /* libc++.tbd in Frameworks */,
+				A6FCAAE01C0819F30074E95B /* CFNetwork.framework in Frameworks */,
+				A6FCAAE81C081E0F0074E95B /* Firebase.framework in Frameworks */,
 				A6C2D36C1C02FDBE001762E0 /* SystemConfiguration.framework in Frameworks */,
 				A6C2D36A1C02FDB8001762E0 /* Security.framework in Frameworks */,
 				A66E39DF1C03AEDB0024B296 /* libGTLTouchStaticLib.a in Frameworks */,
@@ -128,6 +140,10 @@
 		A6C2D3351C02FD98001762E0 = {
 			isa = PBXGroup;
 			children = (
+				A6FCAAE71C081E0F0074E95B /* Firebase.framework */,
+				A6FCAAE31C081A620074E95B /* libicucore.tbd */,
+				A6FCAAE11C081A510074E95B /* libc++.tbd */,
+				A6FCAADF1C0819F30074E95B /* CFNetwork.framework */,
 				A66E39DE1C03AEDB0024B296 /* libGTLTouchStaticLib.a */,
 				A6C2D36B1C02FDBE001762E0 /* SystemConfiguration.framework */,
 				A6C2D3691C02FDB8001762E0 /* Security.framework */,
@@ -317,7 +333,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -364,7 +380,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "GTM_USE_SESSION_FETCHER=1";
